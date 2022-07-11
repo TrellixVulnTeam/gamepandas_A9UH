@@ -121,7 +121,8 @@ def get_status(js):
 
 def get_timeBetCountdown(js):
     return js["timeBetCountdown"]
-
+def get_dealerName(js):
+    return js["dealerName"]
 def get_the_last_json():
 
     return get_json_150()[1]
