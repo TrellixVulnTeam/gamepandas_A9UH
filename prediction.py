@@ -1,44 +1,41 @@
 import fetchjs as fet
 import pandas as pd
+import numpy
+
+from sklearn import tree
+clf = tree.DecisionTreeClassifier()
 
 # dataframe = pd.DataFrame(fet.get_json_150())
 # dataframe_short = dataframe[["id","startAt","endAt","startAtDate","endAtDate","dealerName","roundCode","resultRaw","betTypeResult"]]
 
-def get_id(js):
-    return int(js["id"])
 
-def get_resultRaw(js):
-    if "resultRaw" in js:
-        return js["resultRaw"]
-    return ""
+def make_predict():
 
-def get_betTypeResult(js):
-    if "betTypeResult" in js:
-        return js["betTypeResult"]
-    return ""
+    js150 = fet.get_json_150()
 
-def get_status(js):
-    return js["status"]
+    dataframe = pd.DataFrame(js150)
+    dataframe.sort_values('id', ascending=True,inplace=True)
 
-def get_timeBetCountdown(js):
-    return js["timeBetCountdown"]
-def get_dealerName(js):
-    return js["dealerName"]
-def get_the_last_json():
+    dataframe_short = dataframe[["id","startAtDate","endAtDate","dealerName","roundCode","betTypeResult"]]
+    dealerNameList = [dealer for dealer in set(dataframe_short["dealerName"])]
 
-    return get_json_150()[1]
+    dataframe_short = dataframe_short.values 
 
-def get_xxx(js):
-    resultRaw = get_resultRaw(js)
-    return int(resultRaw[0]),int(resultRaw[2]),int(resultRaw[4])
-def get_type(js):
-    betTypeResult = get_betTypeResult(js)
-    return betTypeResult.split(",")[0],betTypeResult.split(",")[1]
-js150 = fet.get_json_150()
+    for record in dataframe_short:
+        record[3] = dealerNameList.index(record[3])
+        record[4] = int(record[4])
+
+    data = dataframe_short[0:len(dataframe_short)-1]
+    # print(data)
+    label = data[:,5]#done
+    data = data[:,0:5]
+    # print(data)
+    test = dataframe_short[-1]
+    test = [test[0:len(test)-1]] #done
 
 
-def get_info(js):
-    idgame = get_id(js)
-
-
-print(get_type(js150[-1]))
+    clf.fit(data,label)
+    prd = clf.predict(test)[0]
+    if "BIG" in prd:
+        return "BIG"
+    return "SMALL"

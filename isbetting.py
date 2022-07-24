@@ -1,11 +1,11 @@
 import requests,json,time,numpy,pyautogui,os
 from columnar import columnar
 from click import  style
-from sklearn import tree
+# from sklearn import tree
 import pandas as pd
-clf = tree.DecisionTreeClassifier()
+# clf = tree.DecisionTreeClassifier()
 
-
+import prediction
 
 
 ##########____________Pandas,________________________
@@ -178,8 +178,9 @@ def make_data():
 
 def make_predict():
     global predict
-    data,label,test = make_data()
-    predict =  convert_predict(clf.fit(data,label).predict(test)[0])
+    predict = prediction.make_predict()
+    # data,label,test = make_data()
+    # predict =  convert_predict(clf.fit(data,label).predict(test)[0])
     print("make_predict v2",predict)
     add_line()
 
