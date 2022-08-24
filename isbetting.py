@@ -62,11 +62,10 @@ def make_predict():
     lastjs = get_the_last_json()
     betTypeResult = get_betTypeResult(lastjs)
     predict = betTypeResult.split(",")[0]
-    print(predict)
 
 
 
-##########____________DRAW________________________
+##########____________________________________
 
 
 
@@ -81,8 +80,19 @@ def is_betting():
         if timeBetCountdown>=30:
             return True
         else:
-            time.sleep(1)
+            time.sleep(2)
 
+def check_predict_and_result():
+    global predict,history
+    if predict == None:
+        return
+    lastjs = get_the_last_json()
+    betTypeResult = get_betTypeResult(lastjs)
+    result = betTypeResult.split(",")[0]
+    history.append(predict == result)
+    if history.count(True) - history.count(False)>=10:
+        quit_game("hoan thanh nhiem vu")
+    print(history)
 
 ###########################
 
@@ -100,12 +110,13 @@ except:
 
 
 predict = None
+history = []
 time.sleep(get_timeBetCountdown(get_json_1()))
-
 
 while True:
     if is_ended():
         if is_betting():
+            check_predict_and_result()
             make_predict()
             bets()
             time.sleep(get_timeBetCountdown(get_json_1()))
