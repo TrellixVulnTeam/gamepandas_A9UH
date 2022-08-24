@@ -1,8 +1,8 @@
-import requests,json
+import requests,json,time
 
 
 def get_json_1():
-    # print("get_json_1")
+    print("get_json_1")
     URL = "https://api-csn-sun.gameland.vip/api/v1/round/running?"
     js = json.loads(requests.get(URL).text)
     if js == []:
